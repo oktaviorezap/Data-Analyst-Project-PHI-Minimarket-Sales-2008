@@ -1,0 +1,59 @@
+# Data-Analyst-Project-PHI-Minimarket-Sales-2008
+PHI Minimarket Sales 2008
+
+          #IMPORT THE DATA PHI MINIMARKET SALES 2008
+import pandas as pd
+import numpy as np
+import openpyxl
+
+dataset_penjualan = pd.read_excel('Dataset_Penjualan.xlsx')
+print(dataset_penjualan)
+
+
+              #INSPECT THE DATA PHI MINIMARKET SALES 2008
+dataset_penjualan.shape
+dataset_penjualan.describe(exclude='O')
+
+
+              #CHECK OUTLIER DATA PHI MINIMARKET SALES 2008
+# Q1, Q3, dan IQR
+Q1 = dataset_penjualan['nilai_penjualan'].quantile(0.25)
+Q3 = dataset_penjualan['nilai_penjualan'].quantile(0.75)
+IQR = Q3 - Q1 
+
+# Check ukuran (baris dan kolom) sebelum data yang outliers dibuang
+print('Shape awal: ', dataset_penjualan.shape)
+
+# Removing outliers
+dataset_penjualan = dataset_penjualan[~((dataset_penjualan['nilai_penjualan'] < (Q1-1.5*IQR)) | (dataset_penjualan['nilai_penjualan']> (Q3+1.5*IQR)))]
+
+# Check ukuran (baris dan kolom) setelah data yang outliers dibuang
+print('Shape akhir: ', dataset_penjualan.shape)
+
+
+              #INSPECT THE DATA PHI MINIMARKET SALES 2008 AFTER OUTLIER
+dataset_penjualan.info()  
+
+#TRANSFORM_DATA
+dataset_penjualan['Nama Produk'] = dataset_penjualan['nama_produk'].str.extract(r'^(\D+)')
+dataset_penjualan['Nama Produk'] = dataset_penjualan['Nama Produk'].str.replace(r'[()-]', '')
+dataset_penjualan['Nama Produk']
+
+             #MAKING SUBSET DATA FROM PHI MINIMARKET SALES 2008 DATA
+dataset_dki = dataset_penjualan[(dataset_penjualan['nama_propinsi']=='DKI Jakarta') & (dataset_penjualan['Bulan'])]
+print(dataset_dki)
+
+dataset_jatim = dataset_penjualan[(dataset_penjualan['nama_propinsi']=='Jawa Timur') & (dataset_penjualan['Bulan'])]
+print(dataset_jatim)
+
+dataset_sulsel = dataset_penjualan[(dataset_penjualan['nama_propinsi']=='Sulawesi Selatan') & (dataset_penjualan['Bulan'])]
+print(dataset_sulsel)
+
+dataset_buah = dataset_penjualan[(dataset_penjualan['kategori_produk']=='Buah') & (dataset_penjualan['Bulan'])]
+print(dataset_buah)
+
+dataset_mm = dataset_penjualan[(dataset_penjualan['kategori_produk']=='Makanan & Minuman') & (dataset_penjualan['Bulan'])]
+print(dataset_mm)
+
+dataset_sayur = dataset_penjualan[(dataset_penjualan['kategori_produk']=='Sayur-Sayuran') & (dataset_penjualan['Bulan'])]
+print(dataset_sayur)
